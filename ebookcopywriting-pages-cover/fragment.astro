@@ -8,19 +8,46 @@ const PREVIEW_PDF_URL = 'https://www.ebookcopywriting.pl/copywriting-360-preview
 <Layout title="Fragment ebooka Copywriting 360° — przeczytaj za darmo" description="Zajrzyj do środka ebooka Copywriting 360°. Przeczytaj pełny rozdział za darmo.">
 <Navbar />
 <main class="min-h-screen bg-slate-50 pt-20">
-  <section class="bg-navy-900 text-white py-12">
-    <div class="max-w-5xl mx-auto px-4 text-center">
-      <span class="badge bg-primary-500/15 text-primary-300 border border-primary-500/25 mb-4">📖 Darmowy fragment</span>
-      <h1 class="text-3xl md:text-4xl font-bold mb-4"><span class="font-display italic text-primary-400">Copywriting 360°</span> — zajrzyj do środka</h1>
-      <p class="text-slate-400 max-w-2xl mx-auto">Poniżej znajdziesz pełny rozdział ebooka do przeczytania za darmo.</p>
+
+  <!-- Header z okładką -->
+  <section class="bg-navy-900 text-white py-16 md:py-20 relative overflow-hidden">
+    <div class="absolute inset-0 grid-pattern opacity-40"></div>
+    <div class="max-w-5xl mx-auto px-4 relative z-10">
+      <div class="grid md:grid-cols-3 gap-10 items-center">
+        <!-- Cover miniatura -->
+        <div class="hidden md:flex justify-center">
+          <img
+            src="/cover-1.webp"
+            alt="Okładka ebooka Copywriting 360°"
+            class="w-[200px] rounded-xl shadow-2xl shadow-primary-900/40 border border-white/10 transform -rotate-2"
+            width="200"
+            height="283"
+            loading="eager"
+          />
+        </div>
+        <!-- Tekst -->
+        <div class="md:col-span-2 text-center md:text-left">
+          <span class="badge bg-primary-500/15 text-primary-300 border border-primary-500/25 mb-4">📖 Darmowy fragment</span>
+          <h1 class="text-3xl md:text-4xl font-bold mb-4">
+            <span class="font-display italic text-primary-400">Copywriting 360°</span> — zajrzyj do środka
+          </h1>
+          <p class="text-slate-400 max-w-2xl">Poniżej znajdziesz pełny rozdział ebooka do przeczytania za darmo. Przekonaj się, że to nie kolejny ogólnikowy poradnik.</p>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- PDF viewer -->
   <section class="py-12">
     <div class="max-w-5xl mx-auto px-4">
       <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div class="bg-navy-800 px-6 py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
             <span class="text-sm text-slate-400">Fragment: Sztuka pisania nagłówków</span>
           </div>
           <a href={PREVIEW_PDF_URL} target="_blank" rel="noopener" class="text-sm text-primary-400 hover:text-primary-300 transition-colors">Pobierz PDF ↗</a>
@@ -29,17 +56,23 @@ const PREVIEW_PDF_URL = 'https://www.ebookcopywriting.pl/copywriting-360-preview
       </div>
     </div>
   </section>
+
+  <!-- CTA -->
   <section class="py-12 bg-white border-t border-slate-100">
     <div class="max-w-3xl mx-auto px-4 text-center">
       <h2 class="text-2xl font-bold text-slate-900 mb-4">Podoba Ci się? To zaledwie 1 z 16 rozdziałów.</h2>
-      <p class="text-slate-600 mb-8">Pełny ebook to 194 strony.</p>
+      <p class="text-slate-600 mb-8">Pełny ebook to 194 strony praktycznej wiedzy o copywritingu.</p>
       <BuyButton text="Kup pełny ebook za 49 zł" size="lg" />
     </div>
   </section>
+
 </main>
 <Footer />
 <div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-2xl p-8 text-center shadow-2xl"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div><p class="text-slate-700 font-medium">Przekierowuję do płatności...</p></div>
+  <div class="bg-white rounded-2xl p-8 text-center shadow-2xl">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+    <p class="text-slate-700 font-medium">Przekierowuję do płatności...</p>
+  </div>
 </div>
 <script>
   const API_URL = 'https://452b6mr08j.execute-api.eu-central-1.amazonaws.com/prod';
@@ -58,5 +91,3 @@ const PREVIEW_PDF_URL = 'https://www.ebookcopywriting.pl/copywriting-360-preview
   });
 </script>
 </Layout>
-
-
