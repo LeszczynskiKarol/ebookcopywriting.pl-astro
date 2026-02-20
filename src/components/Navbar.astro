@@ -1,0 +1,28 @@
+---
+// src/components/Navbar.astro
+---
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group">
+      <span class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-primary-600 transition-colors">C</span>
+      <span class="flex flex-col">
+        <span class="font-bold text-lg leading-tight">
+          <span class="text-primary-700">Copywriting</span><span class="text-slate-800">360°</span>
+        </span>
+        <span class="text-[10px] text-slate-600 tracking-wider">eBookCopywriting.pl</span>
+      </span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="#dla-kogo" class="text-slate-600 hover:text-primary-600 transition-colors">Dla kogo</a>
+      <a href="#zawartosc" class="text-slate-600 hover:text-primary-600 transition-colors">Zawartość</a>
+      <a href="#autor" class="text-slate-600 hover:text-primary-600 transition-colors">Autor</a>
+      <a href="#faq" class="text-slate-600 hover:text-primary-600 transition-colors">FAQ</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="hidden sm:inline text-sm font-bold text-slate-900">49 zł</span>
+      <a href="#kup" class="bg-primary-500 hover:bg-primary-600 text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all hover:scale-[1.02] shadow-sm">
+        Kup ebook
+      </a>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,15 @@
+---
+interface Props { title: string; subtitle?: string; centered?: boolean; light?: boolean; tag?: 'h2' | 'h3'; }
+const { title, subtitle, centered = true, light = false, tag = 'h2' } = Astro.props;
+const Tag = tag;
+---
+<div class:list={[centered && 'text-center', 'mb-12']}>
+  <Tag class:list={['text-3xl md:text-4xl font-bold mb-4', light ? 'text-white' : 'text-slate-900']}>
+    <Fragment set:html={title} />
+  </Tag>
+  {subtitle && (
+    <p class:list={['text-lg max-w-2xl', centered && 'mx-auto', light ? 'text-slate-300' : 'text-slate-600']}>
+      {subtitle}
+    </p>
+  )}
+</div>

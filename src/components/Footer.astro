@@ -1,0 +1,42 @@
+---
+// src/components/Footer.astro
+---
+<footer class="bg-navy-900 text-slate-400 pt-16 pb-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-3 gap-12 mb-12">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">C</span>
+          <span class="font-bold text-lg"><span class="text-primary-400">Copywriting</span><span class="text-white">360°</span></span>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">Kompletny poradnik pisania tekstów, które sprzedają. 194 strony praktycznej wiedzy.</p>
+        <a href="#kup" class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors">
+          Kup ebook — 49 zł <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Ebook</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#zawartosc" class="hover:text-white transition-colors">Spis treści</a></li>
+          <li><a href="#fragment" class="hover:text-white transition-colors">Przeczytaj fragment</a></li>
+          <li><a href="#dla-kogo" class="hover:text-white transition-colors">Dla kogo</a></li>
+          <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Autor</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="https://icopywriter.pl" target="_blank" rel="noopener" class="hover:text-white transition-colors">iCopywriter.pl</a></li>
+          <li><a href="https://smart-copy.ai" target="_blank" rel="noopener" class="hover:text-white transition-colors">Smart-Copy.ai</a></li>
+          <li><a href="https://torweb.pl" target="_blank" rel="noopener" class="hover:text-white transition-colors">TorWeb.pl</a></li>
+          <li><a href="mailto:kontakt@ebookcopywriting.pl" class="hover:text-white transition-colors">kontakt@ebookcopywriting.pl</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+  <a href="/polityka-prywatnosci" class="text-slate-400 hover:text-white transition-colors">Polityka prywatności</a>
+  <a href="/regulamin" class="text-slate-400 hover:text-white transition-colors">Regulamin</a>
+  <button id="cookie-settings-trigger" class="text-slate-400 hover:text-white transition-colors">🍪 Cookies</button>
+</div>
+  </div>
+</footer>

@@ -1,0 +1,733 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import BuyButton from '../components/BuyButton.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const API_URL = 'https://452b6mr08j.execute-api.eu-central-1.amazonaws.com/prod';
+const PREVIEW_PDF_URL = 'https://ebookcopywriting-ebooks.s3.eu-central-1.amazonaws.com/copywriting-360-preview.pdf';
+
+const ebook = { id: 'ebook-copywriting-360', name: 'Copywriting 360°', subtitle: 'Jak pisać teksty, które sprzedają', price: 49, pages: '194', chapters: 15, format: 'PDF' };
+
+const checklistItems = [
+  'Piszesz teksty na stronę firmową, ale nie wiesz, dlaczego nie konwertują',
+  'Tworzysz posty w social media, ale nikt ich nie komentuje ani nie udostępnia',
+  'Wysyłasz maile sprzedażowe, których open rate nie przekracza 15%',
+  'Chcesz zostać copywriterem, ale nie wiesz od czego zacząć',
+  'Już piszesz teksty na zlecenie, ale chcesz podnieść swoje stawki',
+  'Tworzysz landing page, ale współczynnik konwersji jest żałośnie niski',
+  'Nie wiesz, jak pisać nagłówki, które zatrzymują scrollowanie',
+  'Nie rozumiesz, czym różni się cecha od korzyści',
+  'Nie znasz formuł copywriterskich (AIDA, PAS, 4U, APP)',
+  'Używasz ChatGPT do pisania, ale wyniki są generyczne i sztuczne',
+  'Chcesz pisać teksty SEO, które rankują I czyta się je z przyjemnością',
+  'Piszesz „na czuja" zamiast korzystać ze sprawdzonych procesów',
+  'Chcesz zaoszczędzić lata prób i błędów',
+];
+
+const forWho = [
+  { label: 'Początkujący copywriter', desc: 'chcesz wejść w branżę z solidnymi fundamentami' },
+  { label: 'Freelancer', desc: 'piszesz teksty, ale chcesz systematyzować wiedzę i podnieść stawki' },
+  { label: 'Właściciel firmy', desc: 'sam piszesz teksty na stronę i social media' },
+  { label: 'Marketer', desc: 'tworzysz treści w pracy, ale nikt Cię nie uczył pisać sprzedażowo' },
+  { label: 'Student', desc: 'rozważasz karierę w copywritingu' },
+];
+const notForWho = [
+  'Szukasz magicznego przycisku „zarabiaj 10 000 zł"',
+  'Myślisz, że AI napisze wszystko za Ciebie',
+  'Nie zamierzasz ćwiczyć — sam ebook nie wystarczy',
+  'Jesteś doświadczonym copywriterem z 10+ latami praktyki',
+  'Szukasz kursu wideo z mentorem i feedbackiem na żywo',
+];
+
+const benefits = [
+  { icon: '⏰', title: 'Oszczędzasz setki godzin', desc: 'Zamiast zbierać wiedzę z 50 artykułów, 20 filmów i 10 książek — masz wszystko w jednym miejscu.' },
+  { icon: '💰', title: 'Zarabiasz więcej', desc: 'Copywriter, który zna formuły i techniki edycji — bierze wyższe stawki. Ebook uczy Cię nie tylko JAK, ale DLACZEGO.' },
+  { icon: '🎯', title: 'Teksty zaczynają konwertować', desc: 'Nagłówki, które zatrzymują. Leady, od których nie da się oderwać. CTA, które klikają. Nie magia — system.' },
+  { icon: '🧠', title: 'Rozumiesz psychologię', desc: 'Wiesz, DLACZEGO dany nagłówek działa, dlaczego ta kolejność argumentów przekonuje.' },
+  { icon: '✂️', title: 'Teksty są dopracowane', desc: 'Znasz trzypoziomowy system edycji. Wiesz, jak skracać, co wycinać, kiedy tekst jest gotowy.' },
+  { icon: '🤖', title: 'Nie boisz się AI', desc: 'Wiesz, jak współpracować z AI mądrze i etycznie. Ty kontrolujesz proces i efekt końcowy.' },
+];
+
+const faqItems = [
+  { q: 'Czy ten ebook jest aktualny?', a: 'Tak — ebook jest aktualizowany na 2026 rok. Zawiera rozdział o współpracy z AI (ChatGPT, Claude), aktualny przegląd narzędzi i realne stawki copywriterów na polskim rynku.' },
+  { q: 'Dla kogo jest ten ebook?', a: 'Dla każdego, kto pisze lub chce pisać teksty marketingowe i sprzedażowe: początkujących copywriterów, freelancerów, właścicieli firm, marketerów i pracowników agencji.' },
+  { q: 'Czym różni się od książek Jabłońskiego czy Puzyrkiewicza?', a: 'Copywriting 360° łączy zagadnienia rozrzucone w innych publikacjach: psychologia + techniki + SEO + edycja + AI + kariera. Wszystko w jednym spójnym systemie z ćwiczeniami.' },
+  { q: 'Nie jestem copywriterem — czy ebook jest dla mnie?', a: 'Jak najbardziej. Jeśli prowadzisz firmę i sam piszesz teksty na stronę, maile czy social media — ebook pokaże Ci, jak robić to skuteczniej.' },
+  { q: 'Jak szybko dostanę ebook po zakupie?', a: 'Natychmiast. Po opłaceniu zamówienia otrzymasz link do pobrania na podany email. Cały proces trwa poniżej minuty.' },
+  { q: 'Jakie metody płatności akceptujecie?', a: 'BLIK, karty (Visa, Mastercard), Google Pay, Apple Pay. Płatności obsługuje Stripe — bezpieczny, szyfrowany system.' },
+  { q: 'Czy mogę dostać fakturę?', a: 'Tak — napisz na kontakt@ebookcopywriting.pl z danymi do faktury, a wyślemy ją mailem.' },
+  { q: 'Czy ebook pomoże mi używać AI w copywritingu?', a: 'Tak — cały rozdział poświęcony jest pracy z AI. Poznasz metodę kanapki Human–AI–Human, dowiesz się do czego AI się nadaje i jak unikać generycznego contentu.' },
+  { q: 'W internecie jest dużo darmowych poradników. Czym ten się różni?', a: 'Darmowe poradniki pokrywają fragmenty wiedzy i wymagają godzin szukania. Copywriting 360° to kompletny system w jednym miejscu: formuły, przykłady, ćwiczenia z ramami czasowymi, checklisty.' },
+  { q: 'Czy ebook nada się na Kindle / czytnik?', a: 'Ebook jest w formacie PDF, zoptymalizowanym pod komputery i tablety. Na czytnikach e-ink da się go czytać, ale najlepszy komfort na urządzeniu z większym ekranem.' },
+];
+---
+
+<Layout
+  title="Ebook Copywriting 360° — Kompletny poradnik pisania tekstów, które sprzedają | PDF 2026"
+  description="Ebook o copywritingu po polsku. 218 stron, 16 rozdziałów, gotowe formuły, ćwiczenia i rozdział o AI. Naucz się pisać teksty sprzedażowe, nagłówki, landing page, e-maile i oferty. 49 zł."
+>
+<Navbar />
+<main class="min-h-screen">
+
+<!-- ============ HERO — deep navy like ebook cover ============ -->
+<section class="relative bg-navy-900 text-white pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+  <!-- Grid pattern from ebook cover -->
+  <div class="absolute inset-0 grid-pattern opacity-60"></div>
+  <!-- Geometric circles — top right (like cover) -->
+  <div class="absolute top-[-100px] right-[-50px] w-[500px] h-[500px] rounded-full border border-primary-500/10"></div>
+  <div class="absolute top-[-140px] right-[-90px] w-[580px] h-[580px] rounded-full border border-primary-500/5"></div>
+  <!-- Glow -->
+  <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-accent-cyan/5 rounded-full blur-[100px]"></div>
+  <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary-500/5 rounded-full blur-[80px]"></div>
+
+  <div class="max-w-6xl mx-auto px-4 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div>
+        <div class="flex flex-wrap gap-2 mb-8">
+          <span class="badge bg-primary-500/15 text-primary-300 border border-primary-500/25">📖 Ebook PDF</span>
+          <span class="badge bg-white/5 text-slate-300 border border-white/10">218 strony</span>
+          <span class="badge bg-white/5 text-slate-300 border border-white/10">16 rozdziałów</span>
+          <span class="badge bg-accent-green/15 text-green-300 border border-accent-green/25">🤖 + Rozdział o AI</span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-[1.1] tracking-tight">
+          <span class="font-display italic text-primary-400">Copywriting 360°</span><br />
+          <span class="text-white">ebook o&nbsp;copywritingu i&nbsp;pisaniu tekstów</span>
+        </h1>
+
+        <!-- Green accent line — like ebook cover -->
+        <div class="w-24 h-1 bg-accent-green mb-6 rounded-full"></div>
+
+        <p class="text-xl text-slate-400 font-medium mb-4">Od psychologii do konwersji</p>
+
+        <p class="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
+          Nie musisz być „urodzonym pisarzem". Potrzebujesz <strong class="text-white">systemu</strong> — sprawdzonych formuł, technik i procesów. Ten ebook daje Ci <strong class="text-white">194 strony</strong> praktycznej wiedzy, zgromadzonej przez 15 lat pracy w copywritingu.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
+          <div class="bg-white/5 border border-white/10 rounded-xl px-6 py-3">
+            <span class="text-4xl font-extrabold text-white">{ebook.price} zł</span>
+          </div>
+          <BuyButton text="Kup teraz i zacznij pisać" size="lg" />
+        </div>
+
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
+          {['Dostęp w 30 sekund', 'Bezpieczna płatność', 'PDF na każde urządzenie'].map(item => (
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Product card -->
+      <div class="relative lg:pl-8">
+        <div class="relative bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-1 shadow-2xl shadow-primary-700/30 transform lg:rotate-1 hover:rotate-0 transition-transform duration-500">
+          <div class="bg-white rounded-xl p-8">
+            <div class="text-center">
+              <div class="text-7xl mb-4">🎯</div>
+              <h3 class="text-2xl font-extrabold text-slate-900 mb-1">{ebook.name}</h3>
+              <p class="text-slate-500 mb-1">{ebook.subtitle}</p>
+              <div class="mt-4 pt-4 border-t border-slate-100 flex justify-center gap-3 text-xs text-slate-400 font-medium uppercase tracking-wider">
+                <span>PDF</span><span>•</span><span>{ebook.pages} stron</span><span>•</span><span>2026</span>
+              </div>
+              <div class="mt-6 space-y-2 text-left text-sm text-slate-700">
+                {['194 strony praktycznej wiedzy', '16 rozdziałów — od podstaw po AI', 'Gotowe formuły i szablony', 'Ćwiczenia z ramami czasowymi', 'Checklisty na koniec każdego rozdziału'].map(item => (
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-accent-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -bottom-3 -right-3 bg-navy-900 border-2 border-accent-green rounded-xl px-4 py-2 shadow-xl">
+          <span class="text-sm font-bold text-accent-green flex items-center gap-2">🤖 Z rozdziałem o AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAR — primary blue ============ -->
+<section class="bg-primary-500 py-4">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-white text-sm font-medium">
+      <span>✓ 194 strony praktycznej wiedzy</span>
+      <span>✓ Gotowe formuły i szablony</span>
+      <span>✓ Aktualizowany na 2026</span>
+      <span>✓ Rozdział o AI w copywritingu</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="py-20 md:py-28 px-4 bg-white">
+  <div class="container-narrow text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
+      Pisanie tekstów sprzedażowych to <span class="font-display italic text-primary-700">umiejętność</span>, nie talent
+    </h2>
+    <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto mb-8">
+      Większość tekstów na polskich stronach popełnia te same błędy: mówi o firmie zamiast o kliencie, używa pustych frazesów typu „innowacyjne rozwiązania", a zamiast CTA — kończy się ogólnikiem „skontaktuj się z nami".
+    </p>
+    <p class="text-lg text-slate-700 font-medium mb-8">Efekt? Strony, które nie konwertują. Maile, których nikt nie otwiera. Oferty w koszu.</p>
+    <p class="text-lg text-slate-600">
+      <strong class="text-slate-900">Nie musisz tak mieć.</strong> Copywriting to rzemiosło — zestaw powtarzalnych technik i formuł, których można się nauczyć.
+    </p>
+  </div>
+</section>
+
+<!-- ============ CHECKLIST ============ -->
+<section id="dla-kogo" class="py-20 md:py-28 px-4 bg-slate-50">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Ten ebook o copywritingu jest dla Ciebie, jeśli:" subtitle="Zaznacz w głowie, ile z tych punktów Cię dotyczy 👇" />
+    <div class="grid md:grid-cols-2 gap-3">
+      {checklistItems.map((item, i) => (
+        <label class="reveal bg-white p-4 rounded-xl border border-slate-200 flex items-start gap-3 cursor-pointer hover:border-primary-400 hover:shadow-sm transition-all group" style={`animation-delay:${i*0.03}s`}>
+          <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-primary-500 focus:ring-primary-400 shrink-0" />
+          <span class="text-slate-700 group-hover:text-slate-900 transition-colors">{item}</span>
+        </label>
+      ))}
+    </div>
+    <div class="text-center mt-12">
+      <p class="text-xl text-slate-800 font-bold mb-2">Jeśli zaznaczyłeś chociaż <span class="text-primary-600">3 punkty</span> — ten ebook rozwiąże Twoje problemy.</p>
+      <p class="text-slate-600">Wszystkie kwestie są szczegółowo omówione na 194 stronach.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAK / NIE ============ -->
+<section class="py-20 md:py-28 px-4 bg-white border-t border-slate-100">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Czy Copywriting 360° jest dla Ciebie?" />
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-8">
+        <h3 class="text-xl font-bold text-emerald-800 mb-6 flex items-center gap-2"><span class="text-2xl">✅</span> Ten ebook JEST dla Ciebie:</h3>
+        <ul class="space-y-4">
+          {forWho.map(item => (
+            <li class="flex items-start gap-3"><span class="text-emerald-600 font-bold text-lg mt-0.5">+</span><span class="text-slate-700"><strong class="text-slate-900">{item.label}</strong> — {item.desc}</span></li>
+          ))}
+        </ul>
+      </div>
+      <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-8">
+        <h3 class="text-xl font-bold text-red-800 mb-6 flex items-center gap-2"><span class="text-2xl">❌</span> Ten ebook NIE jest dla Ciebie:</h3>
+        <ul class="space-y-4">
+          {notForWho.map(item => (
+            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg mt-0.5">−</span><span class="text-slate-700">{item}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON TABLE — deep navy, FIXED readability ============ -->
+<section class="bg-navy-900 text-white relative overflow-hidden py-20 md:py-28 px-4">
+  <div class="max-w-5xl mx-auto relative z-10">
+    <SectionHeading title="Dlaczego akurat TEN ebook o copywritingu?" subtitle="Na rynku jest mnóstwo książek i kursów. Czym Copywriting 360° się różni?" light={true} />
+    <div class="overflow-x-auto -mx-4 px-4">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr>
+            <th class="text-left p-4 text-slate-400 font-medium"></th>
+            <th class="p-4 text-slate-400 font-medium text-center">Darmowe poradniki</th>
+            <th class="p-4 text-slate-400 font-medium text-center">Kursy online<br/><span class="text-xs">(300–800 zł)</span></th>
+            <th class="p-4 text-center font-bold rounded-t-xl bg-primary-600 text-white border-2 border-primary-500 border-b-0">
+              ✅ Copywriting 360°<br/><span class="text-xs font-normal text-primary-100">(49 zł)</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            ['Zakres', 'Fragmentaryczny', 'Często rozwodniony', '16 rozdziałów — kompletny system A–Z'],
+            ['Ćwiczenia', 'Brak', 'Bez ram czasowych', 'Z konkretnymi ramami czasowymi'],
+            ['Formuły', 'Wymienione z nazwy', 'Anglojęzyczne przykłady', 'Polskie przykłady przed/po'],
+            ['AI', 'Brak lub ogólniki', 'Jeden moduł', 'Cały rozdział — Human–AI–Human'],
+            ['SEO', 'Osobny artykuł', 'Wspomniany', 'Dedykowany rozdział'],
+            ['Edycja tekstu', 'Nigdy', 'Rzadko', '3-poziomowy system + checklist'],
+            ['Aktualność', 'Sprzed 3–5 lat', 'Zależy od edycji', 'Aktualizowany na 2026'],
+            ['Cena', '0 zł (30h szukania)', '300–800 zł', '49 zł'],
+          ].map((row, i) => (
+            <tr class={i % 2 === 0 ? 'bg-white/[0.02]' : ''}>
+              <td class="p-4 font-medium text-white">{row[0]}</td>
+              <td class="p-4 text-center text-slate-400">{row[1]}</td>
+              <td class="p-4 text-center text-slate-400">{row[2]}</td>
+              <td class="p-4 text-center font-medium bg-primary-600/20 border-x-2 border-primary-500 text-white">{row[3]}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr><td></td><td></td><td></td><td class="border-x-2 border-b-2 border-primary-500 rounded-b-xl h-2 bg-primary-600/20"></td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPIS TREŚCI ============ -->
+<section id="zawartosc" class="py-20 md:py-28 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Co dokładnie znajdziesz w ebooku?" subtitle="194 strony podzielone na 16 rozdziałów + praktyczne materiały" />
+
+    <!-- CZĘŚĆ I -->
+    <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="bg-primary-700 text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider">Część I</span>
+        <h3 class="text-2xl font-bold text-slate-900">Fundamenty copywritingu</h3>
+        <span class="text-slate-400 text-sm">(Rozdziały 1–4)</span>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">🧠 Psychologia i perswazja</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ 6 zasad perswazji Cialdiniego w praktyce</li>
+            <li>✓ <strong class="text-slate-800">Piramida Maslowa w copywritingu</strong></li>
+            <li>✓ Język korzyści vs. cechy — z przykładami</li>
+            <li>✓ Storytelling sprzedażowy i framework Bohatera</li>
+            <li>✓ Persony — jak zdefiniować odbiorcę</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">✍️ Nagłówki i leady</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ <strong class="text-slate-800">Formuła 4U</strong> (Useful, Urgent, Unique, Ultra-specific)</li>
+            <li>✓ 12 typów nagłówków, które działają od dekad</li>
+            <li>✓ Power words — lista słów wyzwalających emocje</li>
+            <li>✓ 8 typów leadów i śliska zjeżdżalnia</li>
+            <li>✓ Technika bucket brigades</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CZĘŚĆ II -->
+    <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="bg-primary-700 text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider">Część II</span>
+        <h3 class="text-2xl font-bold text-slate-900">Pisanie konkretnych formatów</h3>
+        <span class="text-slate-400 text-sm">(Rozdziały 5–10)</span>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">🎯 Landing page i oferty</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ <strong class="text-slate-800">Anatomia landing page</strong> — 12 elementów</li>
+            <li>✓ Above the fold — co musi zobaczyć odwiedzający w 5s</li>
+            <li>✓ Formuły PAS i AIDA z przykładami</li>
+            <li>✓ Social proof i CTA, które klikają</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">📧 E-maile i opisy produktów</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ 7 typów tematów maila podnoszących open rate</li>
+            <li>✓ <strong class="text-slate-800">Sekwencje mailowe</strong> — welcome, nurturing, sales</li>
+            <li>✓ Framework Cecha → Zaleta → Korzyść</li>
+            <li>✓ Karty produktowe e-commerce</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">📱 Social media i blog</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ Facebook, Instagram, LinkedIn — różnice w stylu</li>
+            <li>✓ <strong class="text-slate-800">Artykuły blogowe</strong> — struktura, hooki, skanowalność</li>
+            <li>✓ Reklamy płatne — copy w 125 znakach</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">🏢 Copywriting B2B</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ Różnice B2B vs B2C — ton, argumenty, proces</li>
+            <li>✓ <strong class="text-slate-800">White papers, case studies, oferty</strong></li>
+            <li>✓ LinkedIn jako kanał sprzedażowy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CZĘŚĆ III -->
+    <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="bg-primary-700 text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider">Część III</span>
+        <h3 class="text-2xl font-bold text-slate-900">Zaawansowane techniki</h3>
+        <span class="text-slate-400 text-sm">(Rozdziały 11–14)</span>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">🔍 SEO copywriting</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ Jak pisać, żeby <strong class="text-slate-800">rankować i być czytelnym</strong></li>
+            <li>✓ Dobór słów kluczowych i intencja wyszukiwania</li>
+            <li>✓ Nagłówki H1–H3, meta tagi, linki wewnętrzne</li>
+            <li>✓ Featured snippets</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">✂️ Edycja, redakcja i korekta</h4>
+          <ul class="space-y-2 text-slate-600 text-sm">
+            <li>✓ <strong class="text-slate-800">3-poziomowy lejek edycyjny</strong></li>
+            <li>✓ Formuła Kinga: 2. brudnopis = 1. − 10%</li>
+            <li>✓ „Zabij swoje darlings" + 7 technik self-editingu</li>
+            <li>✓ Checklist edycyjny + stawki redaktorów w PL</li>
+          </ul>
+        </div>
+        <div class="md:col-span-2">
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">🤖 Copywriting z AI</h4>
+          <ul class="space-y-2 text-slate-600 text-sm grid md:grid-cols-2 gap-x-6">
+            <li>✓ <strong class="text-slate-800">Metoda kanapki Human–AI–Human</strong></li>
+            <li>✓ Prompt engineering dla copywriterów</li>
+            <li>✓ Pułapki AI: halucynacje, generyczność, brak głosu marki</li>
+            <li>✓ Etyka i transparentność wobec klienta</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CZĘŚĆ IV -->
+    <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="bg-primary-700 text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider">Część IV</span>
+        <h3 class="text-2xl font-bold text-slate-900">Kariera copywritera</h3>
+        <span class="text-slate-400 text-sm">(Rozdział 15)</span>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3">💼 Zarabianie</h4>
+          <ul class="space-y-2 text-slate-600 text-sm"><li>✓ Ścieżki: freelancer, agencja, in-house</li><li>✓ <strong class="text-slate-800">Realne stawki 2026</strong></li></ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3">📁 Portfolio</h4>
+          <ul class="space-y-2 text-slate-600 text-sm"><li>✓ Jak budować od zera</li><li>✓ Co pokazać klientowi</li></ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-3">💰 Wycena</h4>
+          <ul class="space-y-2 text-slate-600 text-sm"><li>✓ Za słowo, za projekt, value-based</li><li>✓ <strong class="text-slate-800">Jak argumentować cenę</strong></li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- BONUS -->
+    <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-8 reveal">
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="bg-amber-500 text-white px-4 py-2 rounded-lg font-bold text-sm">🎁 BONUS</span>
+        <h3 class="text-2xl font-bold text-slate-900">W każdym rozdziale</h3>
+      </div>
+      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { icon: '📐', title: 'Formuły', items: ['AIDA, PAS, 4U, APP', 'BAB, FAB, Formuła Kinga', 'Human–AI–Human'] },
+          { icon: '🔄', title: 'Przykłady przed/po', items: ['Nagłówki', 'Opisy produktów', 'Tematy maili'] },
+          { icon: '🏋️', title: 'Ćwiczenia', items: ['Z ramami czasowymi', 'Samodzielne i w parach', 'Od 15 do 60 minut'] },
+          { icon: '✅', title: 'Checklisty', items: ['Na koniec rozdziału', 'Do wydrukowania', 'Gotowe do użycia'] },
+        ].map(block => (
+          <div class="bg-white rounded-xl p-5 shadow-sm">
+            <div class="text-3xl mb-3">{block.icon}</div>
+            <h4 class="font-bold text-slate-900 mb-2 text-sm">{block.title}</h4>
+            <ul class="text-xs text-slate-600 space-y-1">{block.items.map(item => <li>• {item}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BEFORE/AFTER EXAMPLES ============ -->
+<section class="py-20 md:py-28 px-4 bg-slate-50">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Jak Copywriting 360° zmienia Twoje teksty?" subtitle="Techniki z ebooka zastosowane w praktyce" />
+    <div class="space-y-6">
+      {[
+        { title: 'Nagłówek strony firmowej', before: '„Witamy na stronie naszej firmy. Oferujemy innowacyjne rozwiązania w zakresie kompleksowej obsługi marketingowej."', after: '„Podwój liczbę zapytań ze strony w 90 dni — bez zwiększania budżetu reklamowego"', technique: 'Formuła 4U + język korzyści (rozdział 3)' },
+        { title: 'Opis produktu w e-commerce', before: '„Fotel biurowy ergonomiczny. Wysokiej jakości materiały. Regulacja wysokości. Kolor: czarny."', after: '„Pracujesz po 8 godzin? Ten fotel chroni Twój kręgosłup. Po miesiącu zapomnisz o bólu pleców — albo zwrócimy pieniądze."', technique: 'Framework C→Z→K + gwarancja (rozdział 8)' },
+        { title: 'Temat maila sprzedażowego', before: '„Newsletter nr 47 — oferta specjalna"', after: '„Karol, zostawiłeś coś w koszyku (i dajemy Ci 20% żeby to odebrać)"', technique: 'Open loop + personalizacja (rozdział 9)' },
+      ].map(example => (
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden reveal">
+          <div class="bg-slate-100 px-6 py-3 border-b border-slate-200"><h3 class="font-bold text-slate-900 text-sm">{example.title}</h3></div>
+          <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+            <div class="p-6"><span class="badge bg-red-100 text-red-700 mb-3">❌ PRZED</span><p class="text-slate-500 italic">{example.before}</p></div>
+            <div class="p-6"><span class="badge bg-emerald-100 text-emerald-700 mb-3">✅ PO</span><p class="text-slate-900 font-medium">{example.after}</p></div>
+          </div>
+          <div class="bg-primary-50 px-6 py-3 border-t border-primary-100"><p class="text-primary-800 text-xs font-medium">💡 Technika: {example.technique}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ============ FORMULAS TABLE ============ -->
+<section class="py-20 md:py-28 px-4 bg-white border-t border-slate-100">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Gotowe formuły copywriterskie" subtitle="Nie wymyślaj koła na nowo. Najlepsi copywriterzy korzystają ze sprawdzonych formuł." />
+    <div class="overflow-x-auto -mx-4 px-4">
+      <table class="w-full text-sm border border-slate-200 rounded-xl overflow-hidden">
+        <thead class="bg-primary-50">
+          <tr>
+            <th class="text-left p-4 font-bold text-primary-900">Formuła</th>
+            <th class="text-left p-4 font-bold text-primary-900">Rozwinięcie</th>
+            <th class="text-left p-4 font-bold text-primary-900 hidden md:table-cell">Do czego ją użyjesz</th>
+            <th class="text-center p-4 font-bold text-primary-900">Rozdział</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          {[
+            ['AIDA', 'Attention → Interest → Desire → Action', 'Landing page, oferty', '5'],
+            ['PAS', 'Problem → Agitate → Solution', 'Landing page, e-maile, reklamy', '7'],
+            ['4U', 'Useful, Urgent, Unique, Ultra-specific', 'Nagłówki, tematy maili', '3'],
+            ['APP', 'Agree → Promise → Preview', 'Leady, wstępy artykułów', '4'],
+            ['BAB', 'Before → After → Bridge', 'Opisy produktów, case studies', '8'],
+            ['FAB', 'Feature → Advantage → Benefit', 'Opisy produktów, oferty B2B', '8'],
+            ['Formuła Kinga', '2. draft = 1. draft − 10%', 'Edycja każdego tekstu', '12'],
+            ['H–AI–H', 'Human → AI → Human', 'Praca z AI przy dowolnym formacie', '14'],
+          ].map((row, i) => (
+            <tr class={i % 2 === 0 ? '' : 'bg-slate-50'}>
+              <td class="p-4 font-bold text-primary-700">{row[0]}</td>
+              <td class="p-4">{row[1]}</td>
+              <td class="p-4 hidden md:table-cell text-slate-500">{row[2]}</td>
+              <td class="p-4 text-center"><span class="bg-primary-100 text-primary-700 font-bold rounded-lg px-2.5 py-1 text-xs">{row[3]}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-center text-slate-500 text-sm mt-6">Każda formuła jest omówiona z <strong class="text-slate-700">polskimi przykładami</strong>, zestawami przed/po i ćwiczeniami.</p>
+  </div>
+</section>
+
+<!-- ============ AI HIGHLIGHT — deep navy background ============ -->
+<section class="bg-navy-900 text-white relative overflow-hidden py-20 md:py-28 px-4 grid-pattern">
+  <div class="max-w-5xl mx-auto relative z-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <span class="badge bg-accent-green/15 text-green-300 border border-accent-green/25 mb-6">🤖 Rozdział o AI</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Copywriting w erze sztucznej inteligencji</h2>
+        <p class="text-slate-300 text-lg mb-6">
+          ChatGPT, Claude, Gemini — copywriterzy ich używają. Nie chodzi o to, <em>czy</em>. Chodzi o to, <strong class="text-white">jak</strong> — żeby AI wzmacniało Twoją pracę, a nie zastępowało myślenie.
+        </p>
+        <ul class="space-y-3 text-slate-300">
+          {['Metoda kanapki Human–AI–Human — Ty kontrolujesz, AI pomaga', 'Do czego AI jest świetne (i do czego absolutnie NIE)', 'Prompt engineering — jak wyciągnąć z AI maksimum', 'Jak unikać „AI-slop" — generycznego contentu', 'Etyka i transparentność wobec klienta'].map(item => (
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-accent-green shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="text-center">
+        <div class="inline-block bg-navy-800 rounded-3xl p-12 border border-primary-500/20">
+          <div class="text-8xl mb-4">🤖</div>
+          <p class="text-slate-400 text-lg"><strong class="text-white">12 stron</strong> praktycznych wskazówek</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDITING HIGHLIGHT ============ -->
+<section class="py-20 md:py-28 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid md:grid-cols-5 gap-12 items-center">
+      <div class="md:col-span-3">        
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">Edycja, redakcja i korekta tekstu</h2>
+        <p class="text-slate-600 text-lg mb-6"><strong class="text-slate-900">50% czasu pracy nad tekstem powinna zajmować edycja</strong> — nie pisanie. Większość poradników na tym się nie skupia. Ten ebook idzie dalej.</p>
+        <ul class="space-y-3 text-slate-700">
+          {['Trzypoziomowy lejek edycyjny — struktura → styl → korekta','Formuła Kinga — „2. brudnopis = 1. minus 10%"','„Zabij swoje darlings" — pełna historia i technika','7 technik self-editingu (czytanie na głos, od końca…)','Lista polskich wypełniaczy do bezlitosnego usunięcia','Kiedy zatrudnić redaktora — i ile to kosztuje w Polsce','Gotowy checklist edycyjny do wydrukowania'].map(item => (
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-primary-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>{item}</span></li>
+          ))}
+        </ul>
+      </div>
+      <div class="md:col-span-2 text-center">
+        <div class="bg-primary-50 rounded-2xl p-8 border border-primary-100">
+          <div class="text-6xl mb-4">✂️</div>
+          <p class="text-slate-500 text-sm">W dużych firmach od edycji są osobni ludzie. Jeśli pracujesz solo — ten rozdział nauczy Cię <strong class="text-slate-800">zastąpić ich wszystkich</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFITS ============ -->
+<section class="py-20 md:py-28 px-4 bg-slate-50">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Co zyskujesz, kupując ten ebook?" />
+    <div class="grid md:grid-cols-3 gap-6">
+      {benefits.map((b, i) => (
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center reveal" style={`animation-delay:${i*0.1}s`}>
+          <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-3xl">{b.icon}</span></div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">{b.title}</h3>
+          <p class="text-slate-600 text-sm">{b.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ============ WITH vs WITHOUT ============ -->
+<section class="py-20 md:py-28 px-4 bg-white border-t border-slate-100">
+  <div class="max-w-5xl mx-auto">
+    <SectionHeading title="Pisanie tekstów BEZ ebooka vs Z ebookiem" />
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="rounded-2xl p-8 border-2 border-red-200 bg-red-50/50">
+        <h3 class="text-xl font-bold text-red-700 mb-6 text-center">❌ Bez tego ebooka</h3>
+        <ul class="space-y-4">
+          {['Nagłówki „na czuja" — raz trafia, raz nie','Landing page zaczyna się od „Witamy na naszej stronie"','Open rate 12%, bo temat maila brzmi jak spam','Opisy to lista cech z karty technicznej','Edycja = „przeczytałem raz, wygląda OK"','AI = wklejasz „napisz tekst" i dostajesz bełkot','„Nie wiem czy to jest dobre…"'].map(item => (
+            <li class="flex items-start gap-3"><span class="text-red-500 shrink-0">✗</span><span class="text-slate-700">{item}</span></li>
+          ))}
+        </ul>
+      </div>
+      <div class="rounded-2xl p-8 border-2 border-emerald-400 bg-emerald-50/50 shadow-lg shadow-emerald-200/30">
+        <h3 class="text-xl font-bold text-emerald-700 mb-6 text-center">✅ Z Copywriting 360°</h3>
+        <ul class="space-y-4">
+          {[['12 typów nagłówków',' + formuła 4U — każdy nagłówek ma system'],['Anatomia strony',', która konwertuje — 12 elementów'],['7 typów tematów',' — open rate rośnie'],['Framework C→Z→K',' — tekst, który sprzedaje'],['3-poziomowy lejek',', formuła −10%, checklist'],['Metoda Human–AI–Human',' — AI wspiera, Ty kontrolujesz'],['Wiesz DLACZEGO tekst działa',' — bo znasz zasady']].map(item => (
+            <li class="flex items-start gap-3"><span class="text-emerald-500 shrink-0">✓</span><span class="text-slate-700"><strong class="text-slate-900">{item[0]}</strong>{item[1]}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PREVIEW PDF ============ -->
+<section id="fragment" class="bg-navy-900 text-white relative overflow-hidden py-20 md:py-28 px-4">
+  <div class="max-w-5xl mx-auto relative z-10">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold text-white mb-4">📖 Przeczytaj fragment za darmo</h2>
+      <p class="text-slate-400">Zobacz, jak wygląda Copywriting 360° od środka.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-navy-800 px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+          <span class="text-sm text-slate-400">Fragment: Sztuka pisania nagłówków</span>
+        </div>
+        <a href={PREVIEW_PDF_URL} target="_blank" rel="noopener" class="text-sm text-primary-400 hover:text-primary-300 flex items-center gap-1 transition-colors">Otwórz w nowej karcie ↗</a>
+      </div>
+      <iframe src={PREVIEW_PDF_URL} class="w-full h-[500px] md:h-[650px] border-0" title="Fragment ebooka Copywriting 360°" loading="lazy"></iframe>
+    </div>
+    <div class="text-center mt-10">
+      <p class="text-slate-400 mb-6">To zaledwie <strong class="text-white">1 z 16 rozdziałów</strong>. Pełny ebook to 194 strony.</p>
+      <BuyButton text={`Kup pełny ebook za ${ebook.price} zł`} size="lg" />
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTHOR ============ -->
+<section id="autor" class="py-20 md:py-28 px-4 bg-white">
+  <div class="max-w-4xl mx-auto">
+    <div class="grid md:grid-cols-5 gap-10 items-center">
+      <div class="md:col-span-2 text-center">
+        <img src="https://s3.eu-north-1.amazonaws.com/piszemy.com.pl/karol_leszczynski_copywriter.jpeg" alt="Karol Leszczyński" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover" />
+        <h3 class="text-xl font-bold text-slate-900">Karol Leszczyński</h3>
+        <p class="text-slate-500 text-sm">Copywriter · Content · Skład tekstu</p>
+      </div>
+      <div class="md:col-span-3">
+        <h2 class="text-2xl font-bold text-slate-900 mb-4">O autorze</h2>
+        <p class="text-slate-600 mb-4 leading-relaxed">Copywriter i content strategist z <strong class="text-slate-800">ponad 15-letnim doświadczeniem</strong> w digital marketingu. Specjalizuję się w tworzeniu treści sprzedażowych, SEO i eksperckich. Jako jeden z nielicznych dostarczam gotowe produkty: ebooki ze składem typograficznym, strony z wdrożonymi tekstami.</p>
+        <p class="text-slate-600 mb-6 leading-relaxed">Pracowałem z wydawnictwami edukacyjnymi, firmami e-commerce, firmami medtech i dziesiątkami firm z różnych branż. Copywriting 360° to kwintesencja 15 lat mojej pracy.</p>
+        <div class="flex flex-wrap gap-3 text-xs">
+          {['15+ lat w copywritingu','1500+ stron w jednym projekcie','LaTeX · Astro · Next.js · AWS','End-to-end delivery'].map(item => (
+            <span class="bg-primary-50 text-primary-700 px-3 py-1.5 rounded-lg font-medium">{item}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING CTA ============ -->
+<section id="kup" class="bg-navy-900 text-white relative overflow-hidden py-20 md:py-28 px-4 grid-pattern">
+  <div class="container-narrow text-center relative z-10">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ile jest warta umiejętność pisania tekstów, które sprzedają?</h2>
+    <p class="text-xl text-slate-400 mb-10">
+      Kurs copywritingu? <span class="line-through">300–800 zł</span>
+      <span class="mx-2">·</span>Landing page od copywritera? <span class="line-through">500–3000 zł</span>
+      <span class="mx-2">·</span>Stracona sprzedaż? <span class="line-through">Bezcenne</span>
+    </p>
+    <div class="bg-navy-800 border border-primary-500/20 rounded-2xl p-10 max-w-lg mx-auto mb-10">
+      <div class="text-6xl font-extrabold text-white mb-2">{ebook.price} zł</div>
+      <p class="text-primary-300 font-medium mb-8">Za cenę 5 kaw ☕ — 194 strony konkretnej wiedzy + formuły + ćwiczenia + AI</p>
+      <BuyButton text="Kupuję ebook — zaczynam pisać lepiej!" size="lg" class="w-full" />
+      <p class="text-slate-500 text-sm mt-4">Jednorazowa płatność · Bez subskrypcji · PDF na zawsze</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+      {['Bezpieczna płatność Stripe','BLIK, karta, Google Pay, Apple Pay','Link na email w 30 sekund'].map(item => (
+        <span class="flex items-center gap-2"><svg class="w-4 h-4 text-accent-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>{item}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="py-20 md:py-28 px-4 bg-white">
+  <div class="max-w-3xl mx-auto">
+    <SectionHeading title="Często zadawane pytania" />
+    <div class="space-y-3">
+      {faqItems.map(item => (
+        <details class="bg-slate-50 rounded-xl p-6 group border border-slate-200/50 hover:border-primary-300 transition-colors">
+          <summary class="font-semibold text-slate-900 cursor-pointer flex justify-between items-center gap-4">
+            <span>{item.q}</span>
+            <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <p class="mt-4 text-slate-600 leading-relaxed" set:html={item.a} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ============ TWO ROADS ============ -->
+<section class="py-20 md:py-28 px-4 bg-slate-50">
+  <div class="container-narrow text-center">
+    <h2 class="text-3xl font-bold text-slate-900 mb-8">Masz dwie drogi do wyboru:</h2>
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <div class="bg-white rounded-2xl p-8 border border-slate-200">
+        <h3 class="text-xl font-bold text-red-700 mb-4">❌ Droga trudna</h3>
+        <p class="text-slate-600">Zbierasz wiedzę z dziesiątek artykułów. Piszesz „na czuja". Tracisz klientów. Nie wiesz, jak wycenić pracę. Unikasz AI. Może za rok — może za dwa — złożysz z tego wiedzę.</p>
+      </div>
+      <div class="bg-primary-50 rounded-2xl p-8 border-2 border-primary-300">
+        <h3 class="text-xl font-bold text-primary-800 mb-4">✅ Droga prosta</h3>
+        <p class="text-slate-700">Kupujesz Copywriting 360° za <strong>49 zł</strong>. Masz 194 strony — formuły, techniki, ćwiczenia, checklisty, AI. Piszesz pierwszy tekst z systemem. Klienci widzą różnicę.</p>
+      </div>
+    </div>
+    <BuyButton text="Wybieram prostą drogę — kupuję ebook" size="lg" />
+    <p class="text-slate-500 mt-4 text-sm">{ebook.price} zł · PDF · {ebook.pages} stron · {ebook.chapters} rozdziałów · Rozdział o AI · Dostęp natychmiast</p>
+  </div>
+</section>
+
+</main>
+<Footer />
+
+<!-- Loading overlay -->
+<div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-2xl p-8 text-center shadow-2xl">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+    <p class="text-slate-700 font-medium">Przekierowuję do płatności...</p>
+  </div>
+</div>
+
+<script define:vars={{ API_URL }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.buy-button');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    buttons.forEach((button) => {
+      button.addEventListener('click', async () => {
+        const productId = button.dataset.productId;
+        loadingOverlay.classList.remove('hidden');
+        button.disabled = true;
+        try {
+          const response = await fetch(`${API_URL}/create-checkout`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId }) });
+          const data = await response.json();
+          if (data.url) { window.location.href = data.url; } else { throw new Error(data.error || 'Błąd'); }
+        } catch (error) {
+          console.error('Checkout error:', error);
+          loadingOverlay.classList.add('hidden');
+          button.disabled = false;
+          alert('Wystąpił błąd. Spróbuj ponownie.');
+        }
+      });
+    });
+  });
+</script>
+</Layout>

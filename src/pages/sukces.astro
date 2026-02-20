@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Dziękujemy za zakup! — Copywriting 360°" description="Twój zakup ebooka Copywriting 360° został zrealizowany pomyślnie.">
+<Navbar />
+<main class="min-h-screen bg-gradient-to-br from-slate-50 to-primary-50 flex items-center justify-center py-24">
+  <div class="max-w-lg mx-auto px-4 text-center">
+    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+      <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+      </div>
+      <h1 class="text-3xl font-bold text-slate-900 mb-4">🎯 Dziękujemy za zakup!</h1>
+      <p class="text-slate-600 mb-6">Twoja płatność została zrealizowana pomyślnie. <strong>Za chwilę otrzymasz email</strong> z linkiem do pobrania ebooka.</p>
+      <div class="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6"><p class="text-sm text-primary-800"><strong>📧 Sprawdź skrzynkę</strong><br/>Email powinien dotrzeć w ciągu kilku minut. Sprawdź też folder SPAM.</p></div>
+      
+      
+      <p class="text-sm text-slate-500 mt-8">Pytania? <a href="mailto:sklep@ebookcopywriting.pl" class="text-primary-600 hover:underline">sklep@ebookcopywriting.pl</a></p>
+    </div>
+  </div>
+</main>
+<Footer />
+</Layout>
