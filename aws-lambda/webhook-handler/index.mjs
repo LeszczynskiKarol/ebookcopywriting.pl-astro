@@ -9,9 +9,23 @@ const ses = new SESClient({ region: process.env.SES_REGION || "us-east-1" });
 
 const PRODUCT_FILES = {
   "ebook-copywriting-360": {
-    s3Key: "copywriting-360.pdf",
-    name: "Copywriting 360\u00B0",
-    fileName: "Copywriting-360-Ebook.pdf",
+    name: "Copywriting 360°",
+    files: [
+      {
+        s3Key: "copywriting-360.pdf",
+        fileName: "Copywriting-360-Ebook.pdf",
+        label: "PDF",
+        contentType: "application/pdf",
+        emoji: "📕",
+      },
+      {
+        s3Key: "copywriting-360.epub",
+        fileName: "Copywriting-360-Ebook.epub",
+        label: "EPUB",
+        contentType: "application/epub+zip",
+        emoji: "📱",
+      },
+    ],
   },
 };
 
@@ -33,7 +47,11 @@ export const handler = async (event) => {
 
     if (!signature) {
       console.error("Missing Stripe signature header");
-      return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing signature" }) };
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "Missing signature" }),
+      };
     }
 
     let stripeEvent;
@@ -41,13 +59,17 @@ export const handler = async (event) => {
       stripeEvent = stripe.webhooks.constructEvent(
         rawBody,
         signature,
-        process.env.STRIPE_WEBHOOK_SECRET
+        process.env.STRIPE_WEBHOOK_SECRET,
       );
     } catch (err) {
       console.error("Signature verification failed:", err.message);
       console.log("isBase64Encoded:", event.isBase64Encoded);
       console.log("Body length:", rawBody?.length);
-      return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid signature" }) };
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "Invalid signature" }),
+      };
     }
 
     console.log("Verified event:", stripeEvent.type);
@@ -60,50 +82,100 @@ export const handler = async (event) => {
 
       if (session.payment_status !== "paid") {
         console.log("Payment not yet paid:", session.payment_status);
-        return { statusCode: 200, headers, body: JSON.stringify({ received: true }) };
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ received: true }),
+        };
       }
 
       const productId = session.metadata?.productId;
-      const customerEmail = session.customer_details?.email || session.customer_email;
+      const customerEmail =
+        session.customer_details?.email || session.customer_email;
 
       console.log("Product:", productId, "Email:", customerEmail);
 
       if (!productId || !PRODUCT_FILES[productId]) {
         console.error("Unknown product:", productId);
-        return { statusCode: 200, headers, body: JSON.stringify({ received: true }) };
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ received: true }),
+        };
       }
 
       if (!customerEmail) {
         console.error("No customer email");
-        return { statusCode: 200, headers, body: JSON.stringify({ received: true }) };
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ received: true }),
+        };
       }
 
       const product = PRODUCT_FILES[productId];
 
-      const command = new GetObjectCommand({
-        Bucket: process.env.S3_BUCKET,
-        Key: product.s3Key,
-        ResponseContentDisposition: `attachment; filename="${product.fileName}"`,
-        ResponseContentType: "application/pdf",
-      });
+      // Generuj presigned URL dla każdego formatu
+      const downloads = [];
+      for (const file of product.files) {
+        const command = new GetObjectCommand({
+          Bucket: process.env.S3_BUCKET,
+          Key: file.s3Key,
+          ResponseContentDisposition: `attachment; filename="${file.fileName}"`,
+          ResponseContentType: file.contentType,
+        });
 
-      const downloadUrl = await getSignedUrl(s3, command, { expiresIn: DOWNLOAD_EXPIRY });
-      console.log("Generated download URL for", customerEmail);
+        const url = await getSignedUrl(s3, command, {
+          expiresIn: DOWNLOAD_EXPIRY,
+        });
+        downloads.push({ ...file, url });
+        console.log(`Generated ${file.label} download URL for`, customerEmail);
+      }
 
-      await sendEmail(customerEmail, product, downloadUrl);
-      console.log("Email sent to", customerEmail);
+      await sendEmail(customerEmail, product, downloads);
+      console.log(
+        "Email sent to",
+        customerEmail,
+        "with",
+        downloads.length,
+        "download links",
+      );
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ received: true }) };
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ received: true }),
+    };
   } catch (error) {
     console.error("Webhook error:", error);
-    return { statusCode: 200, headers, body: JSON.stringify({ received: true, error: error.message }) };
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ received: true, error: error.message }),
+    };
   }
 };
 
-async function sendEmail(to, product, downloadUrl) {
+async function sendEmail(to, product, downloads) {
   const fromName = process.env.EMAIL_FROM_NAME || "eBookCopywriting.pl";
   const fromEmail = process.env.EMAIL_FROM || "sklep@ebookcopywriting.pl";
+
+  // Generuj przyciski pobierania dla każdego formatu
+  const downloadButtonsHtml = downloads
+    .map(
+      (d) => `
+    <a href="${d.url}" style="display:inline-block;background:#1a73e8;color:white;text-decoration:none;padding:16px 28px;border-radius:12px;font-weight:bold;font-size:16px;margin:6px 8px 6px 0;">
+      ${d.emoji} Pobierz ${d.label}
+    </a>`,
+    )
+    .join("\n");
+
+  const downloadLinksText = downloads
+    .map((d) => `${d.label}: ${d.url}`)
+    .join("\n");
+
+  const formatList = downloads.map((d) => d.label).join(" + ");
 
   const htmlBody = `<!DOCTYPE html>
 <html lang="pl">
@@ -117,12 +189,17 @@ async function sendEmail(to, product, downloadUrl) {
 </div>
 <div style="background:white;border-radius:16px;padding:40px 30px;border:1px solid #e2e8f0;">
   <h1 style="color:#0d47a1;font-size:24px;margin:0 0 10px;">&#127881; Dziękujemy za zakup!</h1>
-  <p style="color:#64748b;font-size:16px;margin:0 0 30px;">Twój ebook <strong style="color:#1e293b;">${product.name}</strong> jest gotowy do pobrania.</p>
+  <p style="color:#64748b;font-size:16px;margin:0 0 30px;">Twój ebook <strong style="color:#1e293b;">${product.name}</strong> jest gotowy do pobrania w ${downloads.length} formatach.</p>
   <div style="text-align:center;margin:30px 0;">
-    <a href="${downloadUrl}" style="display:inline-block;background:#1a73e8;color:white;text-decoration:none;padding:16px 32px;border-radius:12px;font-weight:bold;font-size:16px;">&#128229; Pobierz ebook (PDF)</a>
+    ${downloadButtonsHtml}
+  </div>
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px;margin:24px 0;">
+    <p style="margin:0 0 6px;font-size:14px;color:#0c4a6e;"><strong>&#128218; Który format wybrać?</strong></p>
+    <p style="margin:0;font-size:14px;color:#0c4a6e;"><strong>PDF</strong> — najlepszy do czytania na komputerze i do druku. Zachowuje układ stron, fonty i grafiki dokładnie tak, jak zostały zaprojektowane.</p>
+    <p style="margin:8px 0 0;font-size:14px;color:#0c4a6e;"><strong>EPUB</strong> — idealny na czytniki (Kindle, Kobo) i telefon. Tekst dopasowuje się do rozmiaru ekranu, możesz zmieniać wielkość czcionki.</p>
   </div>
   <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:16px;margin:24px 0;">
-    <p style="margin:0;font-size:14px;color:#9a3412;"><strong>&#9200; Link ważny 7 dni.</strong> Pobierz i zapisz plik na dysku.</p>
+    <p style="margin:0;font-size:14px;color:#9a3412;"><strong>&#9200; Linki ważne 7 dni.</strong> Pobierz oba formaty i zapisz na dysku.</p>
   </div>
   <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px;margin:24px 0;">
     <p style="margin:0 0 6px;font-size:14px;color:#0c4a6e;"><strong>&#128161; Wskazówka na start:</strong></p>
@@ -135,17 +212,22 @@ async function sendEmail(to, product, downloadUrl) {
 </div>
 </body></html>`;
 
-  const textBody = `Dziekujemy za zakup ebooka ${product.name}!\n\nPobierz ebook: ${downloadUrl}\n\nLink jest wazny 7 dni. Pobierz i zapisz plik na dysku.\n\nProblemy? kontakt@ebookcopywriting.pl`;
+  const textBody = `Dziekujemy za zakup ebooka ${product.name}!\n\nPobierz ebook (${formatList}):\n${downloadLinksText}\n\nKtory format wybrac?\nPDF — najlepszy do czytania na komputerze i do druku.\nEPUB — idealny na czytniki (Kindle, Kobo) i telefon.\n\nLinki sa wazne 7 dni. Pobierz oba formaty i zapisz na dysku.\n\nProblemy? kontakt@ebookcopywriting.pl`;
 
-  await ses.send(new SendEmailCommand({
-    Source: `${fromName} <${fromEmail}>`,
-    Destination: { ToAddresses: [to] },
-    Message: {
-      Subject: { Data: `Twoj ebook "${product.name}" - link do pobrania`, Charset: "UTF-8" },
-      Body: {
-        Html: { Data: htmlBody, Charset: "UTF-8" },
-        Text: { Data: textBody, Charset: "UTF-8" },
+  await ses.send(
+    new SendEmailCommand({
+      Source: `${fromName} <${fromEmail}>`,
+      Destination: { ToAddresses: [to] },
+      Message: {
+        Subject: {
+          Data: `Twoj ebook "${product.name}" - linki do pobrania (${formatList})`,
+          Charset: "UTF-8",
+        },
+        Body: {
+          Html: { Data: htmlBody, Charset: "UTF-8" },
+          Text: { Data: textBody, Charset: "UTF-8" },
+        },
       },
-    },
-  }));
+    }),
+  );
 }
