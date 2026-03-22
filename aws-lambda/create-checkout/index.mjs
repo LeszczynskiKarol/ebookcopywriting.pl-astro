@@ -54,7 +54,7 @@ export const handler = async (event) => {
             product_data: {
               name: product.name,
               description:
-                "Ebook PDF — 194 strony, 16 rozdziałów, formuły, ćwiczenia, rozdział o AI",
+                "Ebook PDF — 208 stron, 16 rozdziałów, formuły, ćwiczenia, rozdział o AI",
             },
             unit_amount: product.price,
           },

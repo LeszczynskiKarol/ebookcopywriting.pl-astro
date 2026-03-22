@@ -8,7 +8,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 const API_URL = 'https://452b6mr08j.execute-api.eu-central-1.amazonaws.com/prod';
 const PREVIEW_PDF_URL = 'https://www.ebookcopywriting.pl/copywriting-360-preview.pdf';
 
-const ebook = { id: 'ebook-copywriting-360', name: 'Copywriting 360°', subtitle: 'Jak pisać teksty, które sprzedają', price: 49, pages: '194', chapters: 15, format: 'PDF' };
+const ebook = { id: 'ebook-copywriting-360', name: 'Copywriting 360°', subtitle: 'Jak pisać teksty, które sprzedają', price: 49, pages: '208', chapters: 16, format: 'PDF' };
 
 const checklistItems = [
   'Piszesz teksty na stronę firmową, ale nie wiesz, dlaczego nie konwertują',
@@ -66,7 +66,7 @@ const faqItems = [
 
 <Layout
   title="Ebook Copywriting 360° — Kompletny poradnik pisania tekstów, które sprzedają | PDF 2026"
-  description="Ebook o copywritingu po polsku. 194 strony, 16 rozdziałów, gotowe formuły, ćwiczenia i rozdział o AI. Naucz się pisać teksty sprzedażowe, nagłówki, landing page, e-maile i oferty. 49 zł."
+  description="Ebook o copywritingu po polsku. 208 stron, 16 rozdziałów, gotowe formuły, ćwiczenia i rozdział o AI. Naucz się pisać teksty sprzedażowe, nagłówki, landing page, e-maile i oferty. 49 zł."
 >
 <Navbar />
 <main class="min-h-screen">
@@ -84,7 +84,7 @@ const faqItems = [
       <div>
         <div class="flex flex-wrap gap-2 mb-8">
           <span class="badge bg-primary-500/15 text-primary-300 border border-primary-500/25">📖 Ebook PDF</span>
-          <span class="badge bg-white/5 text-slate-300 border border-white/10">194 strony</span>
+          <span class="badge bg-white/5 text-slate-300 border border-white/10">208 strony</span>
           <span class="badge bg-white/5 text-slate-300 border border-white/10">16 rozdziałów</span>
           <span class="badge bg-accent-green/15 text-green-300 border border-accent-green/25">🤖 + Rozdział o AI</span>
         </div>
@@ -99,7 +99,7 @@ const faqItems = [
         <p class="text-xl text-slate-400 font-medium mb-4">Od psychologii do konwersji</p>
 
         <p class="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
-          Nie musisz być „urodzonym pisarzem". Potrzebujesz <strong class="text-white">systemu</strong> — sprawdzonych formuł, technik i procesów. Ten ebook daje Ci <strong class="text-white">194 strony</strong> praktycznej wiedzy, zgromadzonej przez 15 lat pracy w copywritingu.
+          Nie musisz być „urodzonym pisarzem". Potrzebujesz <strong class="text-white">systemu</strong> — sprawdzonych formuł, technik i procesów. Ten ebook daje Ci <strong class="text-white">208 stron</strong> praktycznej wiedzy, zgromadzonej przez 15 lat pracy w copywritingu.
         </p>
 
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
@@ -151,7 +151,7 @@ const faqItems = [
 <section class="bg-primary-500 py-4">
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-white text-sm font-medium">
-      <span>✓ 194 strony praktycznej wiedzy</span>
+      <span>✓ 208 stron praktycznej wiedzy</span>
       <span>✓ Gotowe formuły i szablony</span>
       <span>✓ Aktualizowany na 2026</span>
       <span>✓ Rozdział o AI w copywritingu</span>
@@ -189,7 +189,7 @@ const faqItems = [
     </div>
     <div class="text-center mt-12">
       <p class="text-xl text-slate-800 font-bold mb-2">Jeśli zaznaczyłeś chociaż <span class="text-primary-600">3 punkty</span> — ten ebook rozwiąże Twoje problemy.</p>
-      <p class="text-slate-600">Wszystkie kwestie są szczegółowo omówione na 194 stronach.</p>
+      <p class="text-slate-600">Wszystkie kwestie są szczegółowo omówione na 208 stronach.</p>
     </div>
   </div>
 </section>
@@ -265,7 +265,7 @@ const faqItems = [
 <!-- ============ SPIS TREŚCI ============ -->
 <section id="zawartosc" class="py-20 md:py-28 px-4 bg-white">
   <div class="max-w-5xl mx-auto">
-    <SectionHeading title="Co dokładnie znajdziesz w ebooku?" subtitle="194 strony podzielone na 16 rozdziałów + praktyczne materiały" />
+    <SectionHeading title="Co dokładnie znajdziesz w ebooku?" subtitle="208 stron podzielonych na 16 rozdziałów + praktyczne materiały" />
 
     <!-- CZĘŚĆ I -->
     <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
@@ -601,7 +601,7 @@ const faqItems = [
       <iframe src={PREVIEW_PDF_URL} class="w-full h-[500px] md:h-[650px] border-0" title="Fragment ebooka Copywriting 360°" loading="lazy"></iframe>
     </div>
     <div class="text-center mt-10">
-      <p class="text-slate-400 mb-6">To zaledwie <strong class="text-white">1 z 16 rozdziałów</strong>. Pełny ebook to 194 strony.</p>
+      <p class="text-slate-400 mb-6">To zaledwie <strong class="text-white">1 z 16 rozdziałów</strong>. Pełny ebook to 208 stron.</p>
       <BuyButton text={`Kupuję pełny ebook za ${ebook.price} zł`} size="lg" />
     </div>
   </div>
@@ -656,7 +656,7 @@ const faqItems = [
       <!-- Pricing card -->
       <div class="bg-navy-800 border border-primary-500/20 rounded-2xl p-10 text-center">
         <div class="text-6xl font-extrabold text-white mb-2">{ebook.price} zł</div>
-        <p class="text-primary-300 font-medium mb-8">Za cenę 5 kaw ☕ — 194 strony konkretnej wiedzy + formuły + ćwiczenia + AI</p>
+        <p class="text-primary-300 font-medium mb-8">Za cenę 5 kaw ☕ — 208 stron konkretnej wiedzy + formuły + ćwiczenia + AI</p>
         <BuyButton text="Kupuję ebook — zaczynam pisać lepiej!" size="lg" class="w-full" />
         <p class="text-slate-500 text-sm mt-4">Jednorazowa płatność · Bez subskrypcji · PDF na zawsze</p>
       </div>
@@ -699,7 +699,7 @@ const faqItems = [
       </div>
       <div class="bg-primary-50 rounded-2xl p-8 border-2 border-primary-300">
         <h3 class="text-xl font-bold text-primary-800 mb-4">✅ Droga prosta</h3>
-        <p class="text-slate-700">Kupujesz Copywriting 360° za <strong>49 zł</strong>. Masz 194 strony — formuły, techniki, ćwiczenia, checklisty, AI. Piszesz pierwszy tekst z systemem. Klienci widzą różnicę.</p>
+        <p class="text-slate-700">Kupujesz Copywriting 360° za <strong>49 zł</strong>. Masz 208 stron — formuły, techniki, ćwiczenia, checklisty, AI. Piszesz pierwszy tekst z systemem. Klienci widzą różnicę.</p>
       </div>
     </div>
     <BuyButton text="Wybieram prostą drogę — kupuję ebook" size="lg" />

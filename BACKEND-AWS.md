@@ -22,9 +22,11 @@
 ## Endpoints do zaimplementowania
 
 ### POST /create-checkout
+
 Tworzy Stripe Checkout Session.
 
 **Request:**
+
 ```json
 {
   "productId": "ebook-copywriting-360"
@@ -32,6 +34,7 @@ Tworzy Stripe Checkout Session.
 ```
 
 **Response:**
+
 ```json
 {
   "url": "https://checkout.stripe.com/c/pay/..."
@@ -39,49 +42,58 @@ Tworzy Stripe Checkout Session.
 ```
 
 **Stripe Checkout config:**
+
 ```js
 const session = await stripe.checkout.sessions.create({
-  payment_method_types: ['card', 'blik'],
-  line_items: [{
-    price_data: {
-      currency: 'pln',
-      product_data: {
-        name: 'Copywriting 360° — Ebook PDF',
-        description: '194 strony praktycznej wiedzy o copywritingu',
+  payment_method_types: ["card", "blik"],
+  line_items: [
+    {
+      price_data: {
+        currency: "pln",
+        product_data: {
+          name: "Copywriting 360° — Ebook PDF",
+          description: "208 strony praktycznej wiedzy o copywritingu",
+        },
+        unit_amount: 4900, // 49.00 PLN w groszach
       },
-      unit_amount: 4900, // 49.00 PLN w groszach
+      quantity: 1,
     },
-    quantity: 1,
-  }],
-  mode: 'payment',
-  success_url: 'https://www.ebookcopywriting.pl/sukces?session_id={CHECKOUT_SESSION_ID}',
-  cancel_url: 'https://www.ebookcopywriting.pl/anulowano',
+  ],
+  mode: "payment",
+  success_url:
+    "https://www.ebookcopywriting.pl/sukces?session_id={CHECKOUT_SESSION_ID}",
+  cancel_url: "https://www.ebookcopywriting.pl/anulowano",
   customer_email: undefined, // Stripe zbierze
   metadata: {
-    product: 'ebook-copywriting-360',
+    product: "ebook-copywriting-360",
   },
 });
 ```
 
 ### POST /webhook (Stripe Webhook)
+
 Obsługuje event `checkout.session.completed`.
 
 **Flow po płatności:**
+
 1. Stripe wysyła webhook z `checkout.session.completed`
 2. Lambda weryfikuje podpis webhookowy
 3. Generuje presigned URL do ebooka na S3 (ważny 7 dni)
 4. Wysyła email przez SES z linkiem do pobrania
 
 ### GET /download?token=xxx
+
 Opcjonalny endpoint do bezpiecznego pobierania z tokenem jednorazowym.
 
 ## S3 Buckets
 
 ### Bucket: `copywriting360-ebooks`
+
 - `copywriting-360-full.pdf` — pełny ebook (prywatny)
 - `copywriting-360-preview.pdf` — fragment do preview (publiczny)
 
 ### Bucket: `www.ebookcopywriting.pl`
+
 - Hosting statyczny Astro build
 - CloudFront distribution
 
