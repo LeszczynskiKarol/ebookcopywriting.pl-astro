@@ -51,22 +51,22 @@ const benefits = [
 ];
 
 const faqItems = [
-  { q: 'Czy ten ebook jest aktualny?', a: 'Tak — ebook jest aktualizowany na 2026 rok. Zawiera rozdział o współpracy z AI (ChatGPT, Claude), aktualny przegląd narzędzi i realne stawki copywriterów na polskim rynku.' },
+  { q: 'Czy ten ebook jest aktualny?', a: 'Tak — książka jest aktualizowana na 2026 rok. Zawiera rozdział o współpracy z AI (ChatGPT, Claude), aktualny przegląd narzędzi i realne stawki copywriterów na polskim rynku.' },
   { q: 'Dla kogo jest ten ebook?', a: 'Dla każdego, kto pisze lub chce pisać teksty marketingowe i sprzedażowe: początkujących copywriterów, freelancerów, właścicieli firm, marketerów i pracowników agencji.' },
   { q: 'Czym różni się od książek Jabłońskiego czy Puzyrkiewicza?', a: 'Copywriting 360° łączy zagadnienia rozrzucone w innych publikacjach: psychologia + techniki + SEO + edycja + AI + kariera. Wszystko w jednym spójnym systemie z ćwiczeniami.' },
-  { q: 'Nie jestem copywriterem — czy ebook jest dla mnie?', a: 'Jak najbardziej. Jeśli prowadzisz firmę i sam piszesz teksty na stronę, maile czy social media — ebook pokaże Ci, jak robić to skuteczniej.' },
+  { q: 'Nie jestem copywriterem — czy książka jest dla mnie?', a: 'Jak najbardziej. Jeśli prowadzisz firmę i sam piszesz teksty na stronę, maile czy social media — ebook pokaże Ci, jak robić to skuteczniej.' },
   { q: 'Jak szybko dostanę ebook po zakupie?', a: 'Natychmiast. Po opłaceniu zamówienia otrzymasz link do pobrania na podany email. Cały proces trwa poniżej minuty.' },
   { q: 'Jakie metody płatności akceptujecie?', a: 'BLIK, karty (Visa, Mastercard), Google Pay, Apple Pay. Płatności obsługuje Stripe — bezpieczny, szyfrowany system.' },
   { q: 'Czy mogę dostać fakturę?', a: 'Tak — napisz na kontakt@ebookcopywriting.pl z danymi do faktury, a wyślemy ją mailem.' },
-  { q: 'Czy ebook pomoże mi używać AI w copywritingu?', a: 'Tak — cały rozdział poświęcony jest pracy z AI. Poznasz metodę kanapki Human–AI–Human, dowiesz się do czego AI się nadaje i jak unikać generycznego contentu.' },
+  { q: 'Czy książka pomoże mi używać AI w copywritingu?', a: 'Tak — cały rozdział poświęcony jest pracy z AI. Poznasz metodę kanapki Human–AI–Human, dowiesz się do czego AI się nadaje i jak unikać generycznego contentu.' },
   { q: 'W internecie jest dużo darmowych poradników. Czym ten się różni?', a: 'Darmowe poradniki pokrywają fragmenty wiedzy i wymagają godzin szukania. Copywriting 360° to kompletny system w jednym miejscu: formuły, przykłady, ćwiczenia z ramami czasowymi, checklisty.' },
   { q: 'Czy ebook nada się na Kindle / czytnik?', a: 'Ebook jest w formacie PDF, zoptymalizowanym pod komputery i tablety. Na czytnikach e-ink da się go czytać, ale najlepszy komfort na urządzeniu z większym ekranem.' },
 ];
 ---
 
 <Layout
-  title="Ebook Copywriting 360° — Kompletny poradnik pisania tekstów, które sprzedają | PDF 2026"
-  description="Ebook o copywritingu po polsku. 208 stron, 16 rozdziałów, gotowe formuły, ćwiczenia i rozdział o AI. Naucz się pisać teksty sprzedażowe, nagłówki, landing page, e-maile i oferty. 49 zł."
+  title="Ebook Copywriting 360° — książka-poradnik o pisania tekstów, które sprzedają | PDF 2026"
+  description="Ebook o copywritingu po polsku. Książka obejmuje 208 stron, 16 rozdziałów, gotowe formuły, ćwiczenia i rozdział o AI. Naucz się pisać teksty sprzedażowe, nagłówki, landing page, e-maile i oferty. 49 zł."
 >
 <Navbar />
 <main class="min-h-screen">
@@ -99,7 +99,7 @@ const faqItems = [
         <p class="text-xl text-slate-400 font-medium mb-4">Od psychologii do konwersji</p>
 
         <p class="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
-          Nie musisz być „urodzonym pisarzem". Potrzebujesz <strong class="text-white">systemu</strong> — sprawdzonych formuł, technik i procesów. Ten ebook daje Ci <strong class="text-white">208 stron</strong> praktycznej wiedzy, zgromadzonej przez 15 lat pracy w copywritingu.
+          Nie musisz być „urodzonym pisarzem". Potrzebujesz <strong class="text-white">systemu</strong> — sprawdzonych formuł, technik i procesów. Ta książka daje Ci <strong class="text-white">208 stron</strong> praktycznej wiedzy, zgromadzonej przez 15 lat pracy w copywritingu.
         </p>
 
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
@@ -178,7 +178,7 @@ const faqItems = [
 <!-- ============ CHECKLIST ============ -->
 <section id="dla-kogo" class="py-20 md:py-28 px-4 bg-slate-50">
   <div class="max-w-5xl mx-auto">
-    <SectionHeading title="Ten ebook o copywritingu jest dla Ciebie, jeśli:" subtitle="Zaznacz w głowie, ile z tych punktów Cię dotyczy 👇" />
+    <SectionHeading title="Ta książka o copywritingu jest dla Ciebie, jeśli:" subtitle="Zaznacz w głowie, ile z tych punktów Cię dotyczy 👇" />
     <div class="grid md:grid-cols-2 gap-3">
       {checklistItems.map((item, i) => (
         <label class="reveal bg-white p-4 rounded-xl border border-slate-200 flex items-start gap-3 cursor-pointer hover:border-primary-400 hover:shadow-sm transition-all group" style={`animation-delay:${i*0.03}s`}>
@@ -208,7 +208,7 @@ const faqItems = [
         </ul>
       </div>
       <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-8">
-        <h3 class="text-xl font-bold text-red-800 mb-6 flex items-center gap-2"><span class="text-2xl">❌</span> Ten ebook NIE jest dla Ciebie:</h3>
+        <h3 class="text-xl font-bold text-red-800 mb-6 flex items-center gap-2"><span class="text-2xl">❌</span> Ta książka NIE jest dla Ciebie:</h3>
         <ul class="space-y-4">
           {notForWho.map(item => (
             <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg mt-0.5">−</span><span class="text-slate-700">{item}</span></li>
@@ -265,7 +265,7 @@ const faqItems = [
 <!-- ============ SPIS TREŚCI ============ -->
 <section id="zawartosc" class="py-20 md:py-28 px-4 bg-white">
   <div class="max-w-5xl mx-auto">
-    <SectionHeading title="Co dokładnie znajdziesz w ebooku?" subtitle="208 stron podzielonych na 16 rozdziałów + praktyczne materiały" />
+    <SectionHeading title="Co dokładnie znajdziesz w książce?" subtitle="208 stron podzielonych na 16 rozdziałów + praktyczne materiały" />
 
     <!-- CZĘŚĆ I -->
     <div class="mb-10 bg-primary-50/50 rounded-2xl p-8 reveal border border-primary-100">
@@ -545,7 +545,7 @@ const faqItems = [
 <!-- ============ BENEFITS ============ -->
 <section class="py-20 md:py-28 px-4 bg-slate-50">
   <div class="max-w-5xl mx-auto">
-    <SectionHeading title="Co zyskujesz, kupując ten ebook?" />
+    <SectionHeading title="Co zyskujesz, kupując tę książkę?" />
     <div class="grid md:grid-cols-3 gap-6">
       {benefits.map((b, i) => (
         <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center reveal" style={`animation-delay:${i*0.1}s`}>
