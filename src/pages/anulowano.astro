@@ -24,3 +24,39 @@ import Footer from '../components/Footer.astro';
 </main>
 <Footer />
 </Layout>
+
+<script>
+(function() {
+  'use strict';
+
+  function fireEvent() {
+    if (typeof window.gtag !== 'function') return false;
+
+    window.gtag('event', 'checkout_cancelled', {
+      value: 49.00,
+      currency: 'PLN',
+      items: [{
+        item_id: 'ebook-copywriting-360',
+        item_name: 'Copywriting 360°',
+        price: 49.00,
+        quantity: 1,
+        item_category: 'Ebook',
+      }]
+    });
+
+    console.log('[GA4] checkout_cancelled event fired');
+    return true;
+  }
+
+  // Polling jak na stronie sukcesu — gtag może nie być jeszcze załadowany
+  if (!fireEvent()) {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (fireEvent() || attempts >= 20) {
+        clearInterval(interval);
+      }
+    }, 500);
+  }
+})();
+</script>

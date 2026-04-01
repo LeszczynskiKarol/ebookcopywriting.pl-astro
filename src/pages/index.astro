@@ -725,6 +725,45 @@ const faqItems = [
     buttons.forEach((button) => {
       button.addEventListener('click', async () => {
         const productId = button.dataset.productId;
+
+// GA4: add_to_cart + begin_checkout
+if (typeof window.gtag === 'function') {
+  const item = {
+    item_id: productId,
+    item_name: 'Copywriting 360°',
+    price: 49.00,
+    quantity: 1,
+    item_category: 'Ebook',
+  };
+
+  window.gtag('event', 'add_to_cart', {
+    value: 49.00,
+    currency: 'PLN',
+    items: [item],
+  });
+
+  window.gtag('event', 'begin_checkout', {
+    value: 49.00,
+    currency: 'PLN',
+    items: [item],
+  });
+}
+
+        // GA4: begin_checkout event
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'begin_checkout', {
+            value: 49.00,
+            currency: 'PLN',
+            items: [{
+              item_id: productId,
+              item_name: 'Copywriting 360°',
+              price: 49.00,
+              quantity: 1,
+              item_category: 'Ebook',
+            }]
+          });
+        }
+
         loadingOverlay.classList.remove('hidden');
         button.disabled = true;
         try {

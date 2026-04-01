@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+
+const GA_ID = 'G-VMQMVTNPLT';
 ---
 <Layout title="Dziękujemy za zakup! — Copywriting 360°" description="Twój zakup ebooka Copywriting 360° został zrealizowany pomyślnie.">
 <Navbar />
@@ -14,11 +16,61 @@ import Footer from '../components/Footer.astro';
       <h1 class="text-3xl font-bold text-slate-900 mb-4">🎯 Dziękujemy za zakup!</h1>
       <p class="text-slate-600 mb-6">Twoja płatność została zrealizowana pomyślnie. <strong>Za chwilę otrzymasz email</strong> z linkiem do pobrania ebooka.</p>
       <div class="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6"><p class="text-sm text-primary-800"><strong>📧 Sprawdź skrzynkę</strong><br/>Email powinien dotrzeć w ciągu kilku minut. Sprawdź też folder SPAM.</p></div>
-      
-      
       <p class="text-sm text-slate-500 mt-8">Pytania? <a href="mailto:sklep@ebookcopywriting.pl" class="text-primary-600 hover:underline">sklep@ebookcopywriting.pl</a></p>
     </div>
   </div>
 </main>
 <Footer />
 </Layout>
+
+<script define:vars={{ GA_ID }}>
+(function() {
+  'use strict';
+
+  // Pobierz session_id z URL (Stripe go przekazuje)
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (!sessionId) return; // brak session_id = nie z Checkout
+
+  // Deduplikacja — nie licz ponownie po odświeżeniu
+  const storageKey = 'purchase_tracked_' + sessionId;
+  try {
+    if (sessionStorage.getItem(storageKey)) return;
+  } catch(e) { /* sessionStorage niedostępny — kontynuuj */ }
+
+  function firePurchaseEvent() {
+    if (typeof window.gtag !== 'function') return false;
+
+    window.gtag('event', 'purchase', {
+      transaction_id: sessionId,
+      value: 49.00,
+      currency: 'PLN',
+      items: [{
+        item_id: 'ebook-copywriting-360',
+        item_name: 'Copywriting 360°',
+        price: 49.00,
+        quantity: 1,
+        item_category: 'Ebook',
+      }]
+    });
+
+    // Oznacz jako wysłane
+    try { sessionStorage.setItem(storageKey, '1'); } catch(e) {}
+    console.log('[GA4] purchase event fired, session:', sessionId);
+    return true;
+  }
+
+  // gtag może jeszcze nie być załadowany (czeka na cookie consent)
+  // Próbuj od razu, a jak nie ma — sprawdzaj co 500ms przez 10s
+  if (!firePurchaseEvent()) {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (firePurchaseEvent() || attempts >= 20) {
+        clearInterval(interval);
+      }
+    }, 500);
+  }
+})();
+</script>
