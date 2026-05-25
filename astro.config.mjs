@@ -4,6 +4,13 @@ import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   site: "https://www.ebookcopywriting.pl",
-  integrations: [tailwind(), sitemap()],
+  integrations: [
+    tailwind(),
+    sitemap({
+      filter: (page) =>
+        !page.includes("/sukces") &&
+        !page.includes("/anulowano"),
+    }),
+  ],
   output: "static",
 });
