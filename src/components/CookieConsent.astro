@@ -154,22 +154,33 @@ const GA_ID = 'G-VMQMVTNPLT';
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax;Secure`;
   }
 
-  // ========== GA4 MANAGEMENT ==========
-  function loadGA() {
-    // Zapobiegaj wielokrotnemu ładowaniu
-    if (document.getElementById('ga-script')) return;
+  // ========== GA4 + CONSENT MODE V2 ==========
+  // gtag jest INICJALIZOWANY OD RAZU z default=denied (Consent Mode v2),
+  // żeby Google mógł modelować ruch bez zgody i żeby kolejka eventów
+  // (np. add_to_cart sprzed zgody) nie była tracona.
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  window.gtag = gtag;
 
-    // Załaduj gtag.js
-    const script = document.createElement('script');
-    script.id = 'ga-script';
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+  function initConsentMode(analytics) {
+    // Default state — DENIED dla wszystkich kategorii dopóki nie ma zgody
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': analytics ? 'granted' : 'denied',
+      'wait_for_update': 500,
+    });
 
-    // Inicjalizuj gtag z anonimizacją IP
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { window.dataLayer.push(arguments); }
-    window.gtag = gtag;
+    // Załaduj gtag.js (jeśli jeszcze nie ma)
+    if (!document.getElementById('ga-script')) {
+      const script = document.createElement('script');
+      script.id = 'ga-script';
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      document.head.appendChild(script);
+    }
+
     gtag('js', new Date());
     gtag('config', GA_MEASUREMENT_ID, {
       anonymize_ip: true,
@@ -177,23 +188,22 @@ const GA_ID = 'G-VMQMVTNPLT';
     });
   }
 
-  function removeGA() {
-    // Usuń skrypt
-    const script = document.getElementById('ga-script');
-    if (script) script.remove();
-
-    // Usuń cookies GA
-    const cookies = document.cookie.split(';');
-    cookies.forEach(c => {
-      const name = c.split('=')[0].trim();
-      if (name.startsWith('_ga') || name.startsWith('_gid') || name.startsWith('_gat')) {
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.ebookcopywriting.pl`;
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-      }
+  function updateConsent(analytics) {
+    gtag('consent', 'update', {
+      'analytics_storage': analytics ? 'granted' : 'denied',
     });
 
-    // Wyłącz GA
-    window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
+    if (!analytics) {
+      // Usuń cookies GA przy odmowie/wycofaniu zgody
+      const cookies = document.cookie.split(';');
+      cookies.forEach(c => {
+        const name = c.split('=')[0].trim();
+        if (name.startsWith('_ga') || name.startsWith('_gid') || name.startsWith('_gat')) {
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.ebookcopywriting.pl`;
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
+      });
+    }
   }
 
   // ========== CONSENT MANAGEMENT ==========
@@ -207,12 +217,8 @@ const GA_ID = 'G-VMQMVTNPLT';
 
     setCookie(COOKIE_NAME, consent, COOKIE_DAYS);
 
-    // Zastosuj decyzję
-    if (consent.analytics) {
-      loadGA();
-    } else {
-      removeGA();
-    }
+    // Zastosuj decyzję — update consent state (gtag już jest na stronie)
+    updateConsent(consent.analytics);
 
     // Ukryj banner i modal
     hideBanner();
@@ -296,18 +302,13 @@ const GA_ID = 'G-VMQMVTNPLT';
   // ========== INIT ==========
   const consent = getConsent();
 
+  // Consent Mode v2 — zawsze inicjalizuj gtag z default state.
+  // Jeśli zgoda już była zapisana, użyj jej; w przeciwnym wypadku denied.
+  initConsentMode(consent ? consent.analytics : false);
+
   if (!consent) {
-    // Pierwsza wizyta — pokaż banner
-    // Małe opóźnienie żeby nie blokować LCP
+    // Pierwsza wizyta — pokaż banner (opóźnienie, żeby nie konkurować z LCP)
     setTimeout(showBanner, 800);
-  } else {
-    // Zgoda już zapisana — zastosuj
-    if (consent.analytics) {
-      loadGA();
-    } else {
-      // Upewnij się że GA jest wyłączone
-      window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
-    }
   }
 })();
 </script>

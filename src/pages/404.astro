@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout
+  title="404 — Strona nie istnieje | Copywriting 360°"
+  description="Strona, której szukasz, nie istnieje. Wróć do ebooka Copywriting 360°."
+  noindex={true}
+>
+<Navbar />
+<main class="min-h-screen bg-gradient-to-br from-slate-50 to-primary-50 flex items-center justify-center py-24">
+  <div class="max-w-lg mx-auto px-4 text-center">
+    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+      <div class="text-7xl md:text-8xl font-extrabold text-primary-500 mb-2">404</div>
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-4">Strona nie istnieje</h1>
+      <p class="text-slate-600 mb-8">
+        Możliwe, że adres zawiera literówkę albo strona została usunięta. Wróć na stronę główną
+        albo zajrzyj do ebooka.
+      </p>
+      <div class="space-y-3">
+        <a href="/" class="block w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors">Strona główna</a>
+        <a href="/#kup" class="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl transition-colors">Copywriting 360° — kup ebook za 49 zł</a>
+      </div>
+      <p class="text-sm text-slate-500 mt-8">Coś nie działa? <a href="mailto:kontakt@ebookcopywriting.pl" class="text-primary-600 hover:underline">kontakt@ebookcopywriting.pl</a></p>
+    </div>
+  </div>
+</main>
+<Footer />
+</Layout>

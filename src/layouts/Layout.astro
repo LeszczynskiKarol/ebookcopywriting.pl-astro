@@ -46,6 +46,9 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   {bookJsonLd && (
+    <link rel="preload" as="image" href="/cover-1.webp" fetchpriority="high" />
+  )}
+  {bookJsonLd && (
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context":"https://schema.org","@type":"Book",
       "name":"Copywriting 360° — Jak pisać teksty, które sprzedają",

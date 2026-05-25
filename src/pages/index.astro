@@ -69,6 +69,30 @@ const faqItems = [
   description="Ebook o copywritingu po polsku. 208 stron, 16 rozdziałów, gotowe formuły, ćwiczenia + rozdział o AI. Naucz się pisać teksty, które sprzedają. 49 zł."
   bookJsonLd={true}
 >
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+  }))
+})} />
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Karol Leszczyński",
+  "jobTitle": "Copywriter, Content Strategist",
+  "image": "https://s3.eu-north-1.amazonaws.com/piszemy.com.pl/karol_leszczynski_copywriter.jpeg",
+  "url": "https://icopywriter.pl",
+  "sameAs": [
+    "https://icopywriter.pl",
+    "https://smart-copy.ai",
+    "https://torweb.pl",
+    "https://www.ebookcopywriting.pl"
+  ],
+  "description": "Copywriter z 15+ letnim doświadczeniem, autor ebooka Copywriting 360°"
+})} />
 <Navbar />
 <main class="min-h-screen">
 
@@ -226,12 +250,13 @@ const faqItems = [
     <SectionHeading title="Dlaczego akurat TEN ebook o copywritingu?" subtitle="Na rynku jest mnóstwo książek i kursów. Czym Copywriting 360° się różni?" light={true} />
     <div class="overflow-x-auto -mx-4 px-4">
       <table class="w-full text-sm border-collapse">
+        <caption class="sr-only">Porównanie darmowych poradników, kursów online i ebooka Copywriting 360°</caption>
         <thead>
           <tr>
-            <th class="text-left p-4 text-slate-400 font-medium"></th>
-            <th class="p-4 text-slate-400 font-medium text-center">Darmowe poradniki</th>
-            <th class="p-4 text-slate-400 font-medium text-center">Kursy online<br/><span class="text-xs">(300–800 zł)</span></th>
-            <th class="p-4 text-center font-bold rounded-t-xl bg-primary-600 text-white border-2 border-primary-500 border-b-0">
+            <th scope="col" class="text-left p-4 text-slate-400 font-medium">Kryterium</th>
+            <th scope="col" class="p-4 text-slate-400 font-medium text-center">Darmowe poradniki</th>
+            <th scope="col" class="p-4 text-slate-400 font-medium text-center">Kursy online<br/><span class="text-xs">(300–800 zł)</span></th>
+            <th scope="col" class="p-4 text-center font-bold rounded-t-xl bg-primary-600 text-white border-2 border-primary-500 border-b-0">
               ✅ Copywriting 360°<br/><span class="text-xs font-normal text-primary-100">(49 zł)</span>
             </th>
           </tr>
@@ -248,7 +273,7 @@ const faqItems = [
             ['Cena', '0 zł (30h szukania)', '300–800 zł', '49 zł'],
           ].map((row, i) => (
             <tr class={i % 2 === 0 ? 'bg-white/[0.02]' : ''}>
-              <td class="p-4 font-medium text-white">{row[0]}</td>
+              <th scope="row" class="p-4 font-medium text-white text-left">{row[0]}</th>
               <td class="p-4 text-center text-slate-400">{row[1]}</td>
               <td class="p-4 text-center text-slate-400">{row[2]}</td>
               <td class="p-4 text-center font-medium bg-primary-600/20 border-x-2 border-primary-500 text-white">{row[3]}</td>
@@ -727,42 +752,17 @@ const faqItems = [
       button.addEventListener('click', async () => {
         const productId = button.dataset.productId;
 
-// GA4: add_to_cart + begin_checkout
-if (typeof window.gtag === 'function') {
-  const item = {
-    item_id: productId,
-    item_name: 'Copywriting 360°',
-    price: 49.00,
-    quantity: 1,
-    item_category: 'Ebook',
-  };
-
-  window.gtag('event', 'add_to_cart', {
-    value: 49.00,
-    currency: 'PLN',
-    items: [item],
-  });
-
-  window.gtag('event', 'begin_checkout', {
-    value: 49.00,
-    currency: 'PLN',
-    items: [item],
-  });
-}
-
-        // GA4: begin_checkout event
+        // GA4: add_to_cart + begin_checkout (jeden event każdy, bez duplikatów)
         if (typeof window.gtag === 'function') {
-          window.gtag('event', 'begin_checkout', {
-            value: 49.00,
-            currency: 'PLN',
-            items: [{
-              item_id: productId,
-              item_name: 'Copywriting 360°',
-              price: 49.00,
-              quantity: 1,
-              item_category: 'Ebook',
-            }]
-          });
+          const item = {
+            item_id: productId,
+            item_name: 'Copywriting 360°',
+            price: 49.00,
+            quantity: 1,
+            item_category: 'Ebook',
+          };
+          window.gtag('event', 'add_to_cart', { value: 49.00, currency: 'PLN', items: [item] });
+          window.gtag('event', 'begin_checkout', { value: 49.00, currency: 'PLN', items: [item] });
         }
 
         loadingOverlay.classList.remove('hidden');

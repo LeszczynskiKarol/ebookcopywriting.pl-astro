@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /sukces
+Disallow: /sukces/
+Disallow: /anulowano
+Disallow: /anulowano/
+Disallow: /copywriting-360-preview.pdf
 
 Sitemap: https://www.ebookcopywriting.pl/sitemap-index.xml
