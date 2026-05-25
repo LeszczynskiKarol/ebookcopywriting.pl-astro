@@ -42,9 +42,12 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={new URL(ogImage, Astro.site).toString()} />
-  <!-- Self-hosted fonts (Plus Jakarta Sans + Instrument Serif), latin + latin-ext -->
+  {bookJsonLd && (
+    <link rel="preload" as="image" href="/cover-1.webp" fetchpriority="high" />
+  )}
+  <!-- Self-hosted fonts (Plus Jakarta Sans + Instrument Serif), latin + latin-ext.
+       Tylko 400 jest preloadowane (najczęstsza waga); reszta loaduje lazy via font-display:swap. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/plus-jakarta-sans-400.woff2" crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href="/fonts/plus-jakarta-sans-700.woff2" crossorigin />
   <style is:global>
     @font-face {
       font-family: 'Plus Jakarta Sans';
@@ -96,9 +99,6 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       src: url('/fonts/instrument-serif-400-italic.woff2') format('woff2');
     }
   </style>
-  {bookJsonLd && (
-    <link rel="preload" as="image" href="/cover-1.webp" fetchpriority="high" />
-  )}
   {bookJsonLd && (
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context":"https://schema.org","@type":"Book",
