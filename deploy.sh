@@ -8,7 +8,7 @@ cd /d/ebookcopywriting.pl-astro
 
 echo "📦 Pushing to GitHub..."
 git add .
-git commit -m "git push from local"
+git commit -m "git push from local" || echo "  (brak zmian do commita — kontynuuję)"
 git push origin main
 
 if [ $? -ne 0 ]; then
